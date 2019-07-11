@@ -108,9 +108,7 @@ void	print_double(va_list ap, t_flags *flags)
 	long double	d;
 	long long	num;
 	long double	m;
-	int			i;
 
-	i = 0;
 	num = 0;
 	d = 0;
 	m = 0;

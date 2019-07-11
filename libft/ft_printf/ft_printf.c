@@ -36,7 +36,6 @@ char	check_format(const char *fmt)
 
 void	analyse_format(va_list ap, const char *fmt, char c, t_flags *flags)
 {
-	int		i;
 	char	*str_formats;
 
 	init_flags(flags);
@@ -46,7 +45,6 @@ void	analyse_format(va_list ap, const char *fmt, char c, t_flags *flags)
 	flags->l = contains(flags->fmt_str, 'l');
 	flags->upper_l = contains(flags->fmt_str, 'L');
 	get_flags(flags);
-	i = 0;
 	str_formats = "cs";
 	if (contains(str_formats, c))
 	{
