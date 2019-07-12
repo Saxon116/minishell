@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/11 17:46:34 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/12 12:35:20 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int run(char *filename, char **args, char **environ)
   pid = fork();
   if (pid == 0)
 	{
-    // Child process
     if (execve(filename, args, environ) == -1)
       ft_printf("Error while executing command.\n");
     exit(0);
@@ -43,7 +42,7 @@ int run(char *filename, char **args, char **environ)
   }
 	else
     while (!WIFEXITED(status) && !WIFSIGNALED(status))
-			waitpid(pid, &status, WUNTRACED);
+			wait(&status);
   return (1);
 }
 
@@ -82,12 +81,9 @@ int main()
 	{
 			if(get_next_line(0, &line))
 			{
-				char **array = ft_strsplit(line, ' ');
-				if(array[0])
-				{
-					char *command_path = find_command(array[0], get_exec_paths(environ));
-					ft_printf("command location: %s\n", command_path);
-				}
+				char **input = ft_strsplit(line, ' ');
+				if(input[0])
+					parse_command(input, environ);
 				getcwd(cwd, 1024);
 				ft_printf("%s --> ", cwd);
 				//return 0;

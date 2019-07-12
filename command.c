@@ -6,11 +6,24 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/11 17:36:58 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/12 12:31:53 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
+
+void parse_command(char **input, char **environ)
+{
+  char *command_path = find_command(input[0], get_exec_paths(environ));
+  if(!command_path)
+    ft_printf("%s: command not found\n", input[0]);
+  else
+  {
+    run(command_path, input, environ);
+  }
+}
 
 char *search_command(char *name, char *exec_path)
 {
@@ -18,7 +31,6 @@ char *search_command(char *name, char *exec_path)
   struct dirent *pdirent;
   struct stat		pstat;
   char path[1024];
-
 
   ft_strcpy(path, exec_path);
   ft_strcat(path, "/");
