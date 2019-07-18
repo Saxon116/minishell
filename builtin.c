@@ -6,16 +6,18 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/15 19:41:26 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/18 17:39:07 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int run_builtin(char **input)
+int run_builtin(char **input, char **environ)
 {
 	if(ft_strcmp(input[0], "cd") == 0)
-		return (cd(input));
+		return (cd(input, environ));
+	if(ft_strcmp(input[0], "exit") == 0)
+		exit(0);
 	return (0);
 }
 
@@ -33,11 +35,4 @@ int is_builtin(char *command)
 		i++;
 	}
 	return (0);
-}
-
-int cd(char **input)
-{
-	if(input[1])
-		chdir(input[1]);
-	return (1);
 }

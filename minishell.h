@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/15 19:40:55 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/18 17:34:35 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ char *find_command(char *name, char **exec_paths);
 void parse_command(char **input, char **environ);
 int run(char *filename, char **args, char **environ);
 char **get_exec_paths(char **environ);
-int run_builtin(char **input);
+int run_builtin(char **input, char **environ);
 int is_builtin(char *command);
-int cd(char **input);
+int cd(char **input, char **environ);
+char *ft_getenv(char *name, char **environ);
+
 
 
 

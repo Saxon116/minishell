@@ -6,13 +6,13 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/02 14:59:03 by nkellum           #+#    #+#              #
-#    Updated: 2019/07/15 14:51:40 by nkellum          ###   ########.fr        #
+#    Updated: 2019/07/18 17:39:03 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = main.c command.c builtin.c
+SRC = main.c command.c builtin.c env.c cd.c
 
 FLAGS = -Wextra -Wall -Werror
 

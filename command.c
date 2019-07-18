@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/15 14:58:55 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/18 17:23:32 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void parse_command(char **input, char **environ)
 	char *command_path;
 
 	if(is_builtin(input[0]))
-		run_builtin(input);
+		run_builtin(input, environ);
 	else
 	{
 		command_path = find_command(input[0], get_exec_paths(environ));

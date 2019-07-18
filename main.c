@@ -6,10 +6,9 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/15 14:56:47 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/18 17:13:38 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "minishell.h"
 
@@ -42,29 +41,6 @@ int run(char *filename, char **args, char **environ)
 	else
 		waitpid(pid, NULL, 0);
 	return (1);
-}
-
-
-char **get_exec_paths(char **environ)
-{
-	int i;
-	int found;
-
-	i = 0;
-	found = 0;
-	while(environ[i])
-	{
-		if(ft_strnstr(environ[i], "PATH", 5))
-		{
-			found = 1;
-			break;
-		}
-		i++;
-	}
-	if(found)
-		return (ft_strsplit(environ[i] + 5, ':'));
-	else
-		return (NULL);
 }
 
 int main()
