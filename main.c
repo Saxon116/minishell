@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/18 17:13:38 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/21 17:08:13 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,11 @@ int main()
 
 	getcwd(cwd, 1024);
 	ft_printf("%s --> ", cwd);
-
 	while(1)
 	{
 		if(get_next_line(0, &line))
 		{
-			char **input = ft_strsplit(line, ' ');
+			char **input = ft_strsplit(line, " \t");
 			if(input[0])
 				parse_command(input, environ);
 			getcwd(cwd, 1024);

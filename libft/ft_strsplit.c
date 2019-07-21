@@ -6,14 +6,13 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 21:17:27 by nkellum           #+#    #+#             */
-/*   Updated: 2018/11/26 13:12:45 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/21 17:05:10 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
-static int		num_of_words(char *s, char c)
+static int		num_of_words(char *s, char *chars)
 {
 	int words;
 	int i;
@@ -24,7 +23,7 @@ static int		num_of_words(char *s, char c)
 	words = 0;
 	while (s[i])
 	{
-		if (s[i] == c)
+		if (contains(chars, s[i]))
 			isword = 0;
 		else if (!isword)
 		{
@@ -36,7 +35,7 @@ static int		num_of_words(char *s, char c)
 	return (words);
 }
 
-static int		wordindex(char *s, char c, int n)
+static int		wordindex(char *s, char *chars, int n)
 {
 	int words;
 	int i;
@@ -47,7 +46,7 @@ static int		wordindex(char *s, char c, int n)
 	words = -1;
 	while (s[i])
 	{
-		if (s[i] == c)
+		if (contains(chars, s[i]))
 			isword = 0;
 		else if (!isword)
 		{
@@ -61,19 +60,19 @@ static int		wordindex(char *s, char c, int n)
 	return (-1);
 }
 
-static int		wordlen(char *s, char c, int n)
+static int		wordlen(char *s, char *chars, int n)
 {
 	int i;
 	int length;
 
 	length = 0;
-	i = wordindex(s, c, n);
-	while (s[i + length] != c && s[i + length])
+	i = wordindex(s, chars, n);
+	while (!contains(chars, s[i + length]) && s[i + length])
 		length++;
 	return (length);
 }
 
-char			**ft_strsplit(char const *s, char c)
+char			**ft_strsplit(char const *s, char *chars)
 {
 	char	**array;
 	int		i;
@@ -82,17 +81,17 @@ char			**ft_strsplit(char const *s, char c)
 	i = 0;
 	j = 0;
 	if (!s || (array = malloc(sizeof(char *) *
-	num_of_words((char *)s, c) + 1)) == NULL)
+	num_of_words((char *)s, chars) + 1)) == NULL)
 		return (0);
-	while (i < num_of_words((char *)s, c))
+	while (i < num_of_words((char *)s, chars))
 	{
 		if ((array[i] = malloc(sizeof(char) *
-		wordlen((char *)s, c, i) + 1)) == NULL)
+		wordlen((char *)s, chars, i) + 1)) == NULL)
 			return (0);
 		j = 0;
-		while (j < wordlen((char *)s, c, i))
+		while (j < wordlen((char *)s, chars, i))
 		{
-			array[i][j] = s[wordindex((char *)s, c, i) + j];
+			array[i][j] = s[wordindex((char *)s, chars, i) + j];
 			j++;
 		}
 		array[i][j] = '\0';

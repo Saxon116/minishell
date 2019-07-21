@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/19 15:32:10 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/21 17:06:15 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,8 @@ int check_new_wd(char *first_dir, int index, char **dirs, char *path)
 	struct stat		pstat;
   char *name;
 
-  if(first_dir)
-  {
-    pdir = opendir(first_dir);
-    name = dirs[0];
-  }
-  else
-  {
-    pdir = opendir(dirs[index]);
-    name = dirs[index + 1];
-  }
+  pdir = opendir(first_dir ? first_dir : dirs[index]);
+  name = first_dir ? dirs[0] : dirs[index + 1];
   if(!name)
     return (1);
 	if(!pdir)
@@ -66,7 +58,7 @@ int cd(char **input, char **environ)
 	if(input[1])
   {
     status = check_new_wd(input[1][0] == '/' ? "/" : "." ,
-    0, ft_strsplit(input[1], '/'), input[1]);
+    0, ft_strsplit(input[1], "/"), input[1]);
 		if (status > 0)
       chdir(input[1]);
     else

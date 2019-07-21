@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/18 17:23:32 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/21 18:20:46 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,16 @@ char *search_command(char *name, char *exec_path)
 char *find_command(char *name, char **exec_paths)
 {
 	int i;
+	int offset;
 	char *command_path;
 
+	offset = 0;
 	i = 0;
+	if(ft_strrchr(name, '/'))
+		offset = ft_strrchr(name, '/') - name + 1;
 	while(exec_paths[i])
 	{
-		command_path = search_command(name, exec_paths[i]);
+		command_path = search_command(name + offset, exec_paths[i]);
 		if(command_path)
 		return (command_path);
 		i++;

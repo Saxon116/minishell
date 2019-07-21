@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:13:16 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/18 17:33:52 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/21 17:06:00 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char **get_exec_paths(char **environ)
 		i++;
 	}
 	if(found)
-		return (ft_strsplit(environ[i] + 5, ':'));
+		return (ft_strsplit(environ[i] + 5, ":"));
 	else
 		return (NULL);
 }
