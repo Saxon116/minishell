@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/19 13:40:01 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/22 15:44:09 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int run_builtin(char **input, char **environ);
 int is_builtin(char *command);
 int cd(char **input, char **environ);
 char *ft_getenv(char *name, char **environ);
+void print_char_array(char **array);
+
 
 
 

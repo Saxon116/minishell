@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/21 18:20:46 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/22 17:51:47 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char *search_command(char *name, char *exec_path)
 	ft_strcat(path, "/");
 	pdir = opendir(exec_path);
 	if(!pdir)
-	return (NULL);
+		return (NULL);
 	while ((pdirent = readdir(pdir)) != NULL)
 	{
 		if (ft_strcmp(pdirent->d_name, name) == 0 && pdirent->d_type != DT_DIR)
@@ -47,8 +47,7 @@ char *search_command(char *name, char *exec_path)
 			ft_strcat(path, pdirent->d_name);
 			if (lstat(path, &pstat) == -1)
 				return (0);
-			if((pstat.st_mode & S_IXUSR) || (pstat.st_mode & S_IXGRP)
-			|| (pstat.st_mode & S_IXOTH))
+			if(access(path, X_OK) != -1)
 				return (ft_strdup(path));
 			ft_bzero(path + ft_strlen(exec_path) + 1, ft_strlen(pdirent->d_name));
 		}
@@ -59,18 +58,26 @@ char *search_command(char *name, char *exec_path)
 char *find_command(char *name, char **exec_paths)
 {
 	int i;
-	int offset;
 	char *command_path;
 
-	offset = 0;
 	i = 0;
-	if(ft_strrchr(name, '/'))
-		offset = ft_strrchr(name, '/') - name + 1;
+	if(ft_strlen(name) >= 3 && contains(name, '/') == 1)
+		if(name[0] == '.' && name[1] == '/')
+			if(access(name, F_OK) != -1 && access(name, X_OK) != -1)
+				return (ft_strdup(name));
+	if(!contains(name, '/'))
+		while(exec_paths[i])
+		{
+			command_path = search_command(name, exec_paths[i]);
+			if(command_path)
+				return (command_path);
+			i++;
+		}
+	i = 0;
 	while(exec_paths[i])
 	{
-		command_path = search_command(name + offset, exec_paths[i]);
-		if(command_path)
-		return (command_path);
+		if(ft_strstr(name, exec_paths[i]))
+			return (ft_strdup(name));
 		i++;
 	}
 	return (NULL);
