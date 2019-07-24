@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/22 15:44:09 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/23 17:28:52 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+typedef struct  s_shell
+{
+	char				  **environ;
+	char				  *home;
+}						    t_shell;
 
 
 char *find_command(char *name, char **exec_paths);

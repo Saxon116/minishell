@@ -6,11 +6,38 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/22 17:51:47 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/23 16:30:12 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int is_dir(char *path)
+{
+	char temp_buf[1024];
+	char buf[1024];
+	struct stat		pstat;
+	int len;
+
+	bzero(buf, 1024);
+	lstat(path, &pstat);
+	if (lstat(path, &pstat) == -1)
+		return (0);
+	if(!S_ISLNK(pstat.st_mode))
+		return (S_ISDIR(pstat.st_mode));
+	else
+	{
+		len = readlink(path, temp_buf, 1023);
+		if (len != -1)
+			temp_buf[len] = '\0';
+		if(temp_buf[0] != '/')
+			buf[0] = '/';
+		ft_strcat(buf, temp_buf);
+		if (lstat(buf, &pstat) == -1)
+			return (0);
+		return (S_ISDIR(pstat.st_mode));
+	}
+}
 
 void parse_command(char **input, char **environ)
 {
@@ -24,7 +51,10 @@ void parse_command(char **input, char **environ)
 		if(!command_path)
 			ft_printf("minishell: %s: command not found\n", input[0]);
 		else
-			run(command_path, input, environ);
+			if(is_dir(command_path))
+				ft_printf("minishell: %s: Is a directory\n", command_path);
+			else
+				run(command_path, input, environ);
 	}
 }
 
@@ -42,7 +72,8 @@ char *search_command(char *name, char *exec_path)
 		return (NULL);
 	while ((pdirent = readdir(pdir)) != NULL)
 	{
-		if (ft_strcmp(pdirent->d_name, name) == 0 && pdirent->d_type != DT_DIR)
+		if (ft_strcmp(pdirent->d_name, name) == 0
+		&& pdirent->d_type != DT_DIR && pdirent->d_type != DT_LNK)
 		{
 			ft_strcat(path, pdirent->d_name);
 			if (lstat(path, &pstat) == -1)

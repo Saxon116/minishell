@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/22 15:44:11 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/23 17:30:23 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void print_char_array(char **array)
 	int i = 0;
 	while(array[i])
 	{
-		ft_printf("array[%d] : %s\n", i, array[i]);
+		ft_printf("%s\n", array[i]);
 		i++;
 	}
 }
@@ -46,9 +46,13 @@ int run(char *filename, char **args, char **environ)
 int main()
 {
 	char *line;
+	t_shell *shell;
 	char cwd[1024];
 	extern char **environ;
 
+	if((shell = malloc(sizeof(t_shell))) == NULL)
+		return (0);
+	shell->home = ft_getenv("HOME", environ);
 	getcwd(cwd, 1024);
 	ft_printf("%s --> ", cwd);
 	while(1)
