@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/23 16:30:12 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/24 23:24:32 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,22 @@ int is_dir(char *path)
 	}
 }
 
-void parse_command(char **input, char **environ)
+void parse_command(char **input, t_shell *shell)
 {
 	char *command_path;
 
 	if(is_builtin(input[0]))
-		run_builtin(input, environ);
+		run_builtin(input, shell);
 	else
 	{
-		command_path = find_command(input[0], get_exec_paths(environ));
+		command_path = find_command(input[0], get_exec_paths(shell));
 		if(!command_path)
 			ft_printf("minishell: %s: command not found\n", input[0]);
 		else
 			if(is_dir(command_path))
 				ft_printf("minishell: %s: Is a directory\n", command_path);
 			else
-				run(command_path, input, environ);
+				run(command_path, input, shell->environ);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/23 17:28:52 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/24 23:25:54 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,20 @@ typedef struct  s_shell
 
 
 char *find_command(char *name, char **exec_paths);
-void parse_command(char **input, char **environ);
+void parse_command(char **input, t_shell *shell);
 int run(char *filename, char **args, char **environ);
-char **get_exec_paths(char **environ);
-int run_builtin(char **input, char **environ);
+char **get_exec_paths(t_shell *shell);
+int run_builtin(char **input, t_shell *shell);
 int is_builtin(char *command);
-int cd(char **input, char **environ);
-char *ft_getenv(char *name, char **environ);
+int cd(char **input, t_shell *shell);
+char *ft_getenv(t_shell *shell, char *name);
 void print_char_array(char **array);
+char **string_arr_cpy(char **array);
+void add_env_var(t_shell *shell, char *var);
+int check_env(t_shell *shell, char *name);
+
+
+
 
 
 

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/23 17:30:23 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/24 23:24:39 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int main()
 
 	if((shell = malloc(sizeof(t_shell))) == NULL)
 		return (0);
-	shell->home = ft_getenv("HOME", environ);
+	shell->environ = string_arr_cpy(environ);
+	shell->home = ft_getenv(shell, "HOME");
 	getcwd(cwd, 1024);
 	ft_printf("%s --> ", cwd);
 	while(1)
@@ -61,7 +62,7 @@ int main()
 		{
 			char **input = ft_strsplit(line, " \t");
 			if(input[0])
-				parse_command(input, environ);
+				parse_command(input, shell);
 			getcwd(cwd, 1024);
 			ft_printf("%s --> ", cwd);
 		}

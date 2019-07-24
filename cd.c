@@ -6,13 +6,13 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/22 15:55:05 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/24 23:25:47 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int cd(char **input, char **environ)
+int cd(char **input, t_shell *shell)
 {
 	char *path;
 	int i;
@@ -43,7 +43,7 @@ int cd(char **input, char **environ)
 	}
 	else
 	{
-		path = ft_getenv("HOME", environ);
+		path = ft_getenv(shell, "HOME");
 		if(!path)
 		{
 			ft_printf("HOME environment variable not defined.\n");

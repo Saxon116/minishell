@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/23 16:42:04 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/24 23:45:30 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,20 @@ int echo(char **input)
 	return (1);
 }
 
-int run_builtin(char **input, char **environ)
+int run_builtin(char **input, t_shell *shell)
 {
 	if(ft_strcmp(input[0], "cd") == 0)
-		return (cd(input, environ));
+		return (cd(input, shell));
 	if(ft_strcmp(input[0], "echo") == 0)
 		echo(input);
 	if(ft_strcmp(input[0], "exit") == 0)
 		exit(0);
 	if(ft_strcmp(input[0], "env") == 0)
-		print_char_array(environ);
+	{
+		if(input[1])
+			add_env_var(shell, input[1]);
+		print_char_array(shell->environ);
+	}
 	return (0);
 }
 
