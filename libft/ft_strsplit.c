@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 21:17:27 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/21 17:05:10 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/25 15:43:30 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char			**ft_strsplit(char const *s, char *chars)
 	i = 0;
 	j = 0;
 	if (!s || (array = malloc(sizeof(char *) *
-	num_of_words((char *)s, chars) + 1)) == NULL)
+	(num_of_words((char *)s, chars) + 1))) == NULL)
 		return (0);
 	while (i < num_of_words((char *)s, chars))
 	{

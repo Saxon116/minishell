@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/24 23:24:39 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/25 17:19:50 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,9 @@ int main()
 	shell->environ = string_arr_cpy(environ);
 	shell->home = ft_getenv(shell, "HOME");
 	getcwd(cwd, 1024);
-	ft_printf("%s --> ", cwd);
+	shell->pwd = ft_strdup(cwd);
+	shell->oldpwd = ft_strdup(cwd);
+	ft_printf(YELLOWBLUE"%s --> "RESET, cwd);
 	while(1)
 	{
 		if(get_next_line(0, &line))
@@ -64,7 +66,7 @@ int main()
 			if(input[0])
 				parse_command(input, shell);
 			getcwd(cwd, 1024);
-			ft_printf("%s --> ", cwd);
+			ft_printf(YELLOWBLUE"%s --> "RESET, cwd);
 		}
 		free(line);
 	}
