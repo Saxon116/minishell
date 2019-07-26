@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 17:17:46 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/26 18:27:24 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void add_env_var(t_shell *shell, char *var);
 int check_env(t_shell *shell, char *name);
 void del_env_var(t_shell *shell, int index);
 int ft_setenv(t_shell *shell, char **input);
+char *replace_substring(char *str, char *substr, char *rep);
+
 
 
 

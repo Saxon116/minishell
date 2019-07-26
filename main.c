@@ -6,11 +6,35 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 17:19:50 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/26 18:47:18 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
+
+char *replace_substring(char *str, char *substr, char *rep)
+{
+	char *start;
+	char *middle;
+	char *newstr;
+	int index_substr;
+
+	if(!str || !substr || !rep)
+		return (ft_strdup(str));
+	index_substr = ft_strstr(str, substr) - str;
+	if(ft_strcmp(str, substr) == 0)
+		return (ft_strdup(rep));
+	if(!ft_strstr(str, substr))
+		return (ft_strdup(str));
+	if(index_substr == 0)
+		return (ft_strjoin(rep, str + ft_strlen(substr)));
+	start = ft_strsub(str, 0, index_substr);
+	middle = ft_strjoin(start, rep);
+	newstr = ft_strjoin(middle, str + index_substr + ft_strlen(substr));
+	free(start);
+	free(middle);
+	return (newstr);
+}
 
 void print_char_array(char **array)
 {
@@ -48,6 +72,7 @@ int main()
 	char *line;
 	t_shell *shell;
 	char cwd[1024];
+	char *cwd_home;
 	extern char **environ;
 
 	if((shell = malloc(sizeof(t_shell))) == NULL)
@@ -57,7 +82,8 @@ int main()
 	getcwd(cwd, 1024);
 	shell->pwd = ft_strdup(cwd);
 	shell->oldpwd = ft_strdup(cwd);
-	ft_printf(YELLOWBLUE"%s --> "RESET, cwd);
+	cwd_home = replace_substring(cwd, shell->home, "~");
+	ft_printf(YELLOWBLUE"%s -->"RESET" ", cwd_home);
 	while(1)
 	{
 		if(get_next_line(0, &line))
@@ -66,7 +92,9 @@ int main()
 			if(input[0])
 				parse_command(input, shell);
 			getcwd(cwd, 1024);
-			ft_printf(YELLOWBLUE"%s --> "RESET, cwd);
+			shell->home = ft_getenv(shell, "HOME");
+			cwd_home = replace_substring(cwd, shell->home, "~");
+			ft_printf(YELLOWBLUE"%s -->"RESET" ", cwd_home);
 		}
 		free(line);
 	}

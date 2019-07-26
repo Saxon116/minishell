@@ -6,11 +6,37 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 14:40:03 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/26 18:46:30 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char **replace_tilde(t_shell *shell, char **input)
+{
+	int i;
+	int length;
+	char **new_array;
+
+	length = 0;
+	while(input[length])
+		length++;
+	if(length < 2)
+		return (input);
+	i = 1;
+	if(check_env(shell, "HOME") == -1)
+	{
+		ft_printf("HOME not set.\n");
+		return (input);
+	}
+	new_array = string_arr_cpy(input);
+	while(input[i])
+	{
+		new_array[i] = replace_substring(input[i], "~", shell->home);
+		i++;
+	}
+	return (new_array);
+}
 
 int is_dir(char *path)
 {
@@ -43,6 +69,7 @@ void parse_command(char **input, t_shell *shell)
 {
 	char *command_path;
 
+	input = replace_tilde(shell, input);
 	if(is_builtin(input[0]))
 		run_builtin(input, shell);
 	else

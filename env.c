@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:13:16 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 14:35:25 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/26 18:16:32 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,12 @@ int check_env(t_shell *shell, char *name)
 {
 	int i;
 	int found;
-	int length;
 
 	i = 0;
-	length = 0;
 	found = 0;
 	while(shell->environ[i])
 	{
-		length = ft_strchr(shell->environ[i], '=') - shell->environ[i];
-		if(ft_strnstr(shell->environ[i], name, length))
+		if(ft_strnstr(shell->environ[i], name, ft_strlen(name)))
 		{
 			found = 1;
 			break;
@@ -39,8 +36,17 @@ int check_env(t_shell *shell, char *name)
 
 char *ft_getenv(t_shell *shell, char *name)
 {
+  int i;
+  char *path;
+
+  i = 0;
 	if(check_env(shell, name) != -1)
-		return (ft_strdup(shell->environ[check_env(shell, name)]));
+  {
+    path = shell->environ[check_env(shell, name)];
+    while(path[i] != '=')
+			i++;
+		return (ft_strdup(path + i + 1));
+  }
 	else
 		return (NULL);
 }

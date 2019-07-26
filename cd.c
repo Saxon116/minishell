@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 17:11:02 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/26 17:43:58 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,10 @@
 int cd(char **input, t_shell *shell)
 {
 	char *path;
-	int i;
 	int length;
 	char cwd[1024];
 	char *join;
 
-	i = 0;
 	length = 0;
 	while(input[length])
 		length++;
@@ -33,7 +31,6 @@ int cd(char **input, t_shell *shell)
 	{
 		if(ft_strcmp(input[1], "-") == 0)
 		{
-
 			join = ft_strdup(shell->oldpwd);
 			free(shell->oldpwd);
 			shell->oldpwd = ft_strdup(shell->pwd);
@@ -81,14 +78,7 @@ int cd(char **input, t_shell *shell)
 			ft_printf("HOME environment variable not defined.\n");
 			return (0);
 		}
-		while(path[i] != '=')
-			i++;
-		if(!path[i + 1])
-		{
-			ft_printf("HOME environment variable is empty.\n");
-			return (0);
-		}
-		chdir(path + i + 1);
+		chdir(path);
 	}
 	return (1);
 }
