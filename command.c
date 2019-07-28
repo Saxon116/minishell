@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/26 18:46:30 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/28 19:37:57 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char *search_command(char *name, char *exec_path)
 	while ((pdirent = readdir(pdir)) != NULL)
 	{
 		if (ft_strcmp(pdirent->d_name, name) == 0
-		&& pdirent->d_type != DT_DIR && pdirent->d_type != DT_LNK)
+		&& pdirent->d_type != DT_DIR)
 		{
 			ft_strcat(path, pdirent->d_name);
 			if (lstat(path, &pstat) == -1)
@@ -123,6 +123,10 @@ char *find_command(char *name, char **exec_paths)
 		if(name[0] == '.' && name[1] == '/')
 			if(access(name, F_OK) != -1 && access(name, X_OK) != -1)
 				return (ft_strdup(name));
+	if(ft_strlen(name) >= 3 && contains(name, '/'))
+		if(name[0] == '/')
+			if(access(name, F_OK) != -1 && access(name, X_OK) != -1)
+				return (ft_strdup(name));
 	if(!contains(name, '/') && exec_paths)
 		while(exec_paths[i])
 		{
@@ -131,12 +135,5 @@ char *find_command(char *name, char **exec_paths)
 				return (command_path);
 			i++;
 		}
-	i = 0;
-	while(exec_paths && exec_paths[i])
-	{
-		if(ft_strstr(name, exec_paths[i]))
-			return (ft_strdup(name));
-		i++;
-	}
 	return (NULL);
 }

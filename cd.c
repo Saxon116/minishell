@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/26 17:43:58 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/28 19:16:10 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int cd(char **input, t_shell *shell)
 	char *path;
 	int length;
 	char cwd[1024];
-	char *join;
+	char *temp;
 
 	length = 0;
 	while(input[length])
@@ -31,18 +31,14 @@ int cd(char **input, t_shell *shell)
 	{
 		if(ft_strcmp(input[1], "-") == 0)
 		{
-			join = ft_strdup(shell->oldpwd);
+			temp = ft_strdup(shell->oldpwd);
 			free(shell->oldpwd);
 			shell->oldpwd = ft_strdup(shell->pwd);
 			free(shell->pwd);
-			shell->pwd = ft_strdup(join);
-			free(join);
-			join = ft_strjoin("OLDPWD=", shell->oldpwd);
-			add_env_var(shell, join);
-			free(join);
-			join = ft_strjoin("PWD=", shell->pwd);
-			add_env_var(shell, join);
-			free(join);
+			shell->pwd = ft_strdup(temp);
+			free(temp);
+			set_existing_var(shell, "OLDPWD", shell->oldpwd);
+			set_existing_var(shell, "PWD", shell->pwd);
 			ft_printf("%s\n", shell->pwd);
 			chdir(shell->pwd);
 			return (0);
@@ -63,12 +59,8 @@ int cd(char **input, t_shell *shell)
 		shell->oldpwd = ft_strdup(shell->pwd);
 		free(shell->pwd);
 		shell->pwd = ft_strdup(cwd);
-		join = ft_strjoin("OLDPWD=", shell->oldpwd);
-		add_env_var(shell, join);
-		free(join);
-		join = ft_strjoin("PWD=", shell->pwd);
-		add_env_var(shell, join);
-		free(join);
+		set_existing_var(shell, "OLDPWD", shell->oldpwd);
+		set_existing_var(shell, "PWD", shell->pwd);
 	}
 	else
 	{
@@ -79,6 +71,12 @@ int cd(char **input, t_shell *shell)
 			return (0);
 		}
 		chdir(path);
+		free(shell->oldpwd);
+		shell->oldpwd = ft_strdup(shell->pwd);
+		free(shell->pwd);
+		shell->pwd = ft_strdup(path);
+		set_existing_var(shell, "OLDPWD", shell->oldpwd);
+		set_existing_var(shell, "PWD", shell->pwd);
 	}
 	return (1);
 }

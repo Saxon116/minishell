@@ -6,26 +6,44 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 14:10:13 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/28 21:26:49 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int echo(char **input)
+/*
+** DESCRIPTION:
+** This function implements the most basic echo command by printing
+** the arguments that are sent into it.
+*/
+void echo(char **input)
 {
 	int i;
 
 	i = 1;
 	while(input[i])
 	{
+		if(i != 1)
+			ft_printf(" ");
 		ft_printf(input[i]);
 		i++;
 	}
 	ft_printf("\n");
-	return (1);
 }
 
+/*
+** DESCRIPTION:
+** This function checks if the new environment variable is in the
+** correct "VAR_NAME=value" format before calling the add_env_var
+** function to save the new value into the environ array.
+**
+** RETURN VALUE:
+** On success, 1 is returned. On error, 0 is returned.
+**
+** EXTERNAL FUNCTIONS:
+** add_env_var is located in edit_env.c
+*/
 int ft_setenv(t_shell *shell, char **input)
 {
 	int length;
@@ -54,6 +72,18 @@ int ft_setenv(t_shell *shell, char **input)
 	return (1);
 }
 
+/*
+** DESCRIPTION:
+** This function checks if the environment variable to be deleted
+** is already set before calling the del_env_var function to
+** remove the variable from the environ array.
+**
+** RETURN VALUE:
+** On success, 1 is returned. On error, 0 is returned.
+**
+** EXTERNAL FUNCTIONS:
+** cd function is located in cd.c
+*/
 int ft_unsetenv(t_shell *shell, char **input)
 {
 	int length;
@@ -77,6 +107,16 @@ int ft_unsetenv(t_shell *shell, char **input)
 	return (1);
 }
 
+/*
+** DESCRIPTION:
+** This function calls the appropriate builtin command function.
+**
+** RETURN VALUE:
+** It returns 1 if the builtin ran correctly, or 0 if it failed.
+**
+** EXTERNAL FUNCTIONS:
+** cd function is located in cd.c
+*/
 int run_builtin(char **input, t_shell *shell)
 {
 	if(ft_strcmp(input[0], "cd") == 0)
@@ -94,6 +134,15 @@ int run_builtin(char **input, t_shell *shell)
 	return (0);
 }
 
+/*
+** DESCRIPTION:
+** This function checks if the program to be run is one of
+** minishell's builtins.
+**
+** RETURN VALUE:
+** It returns 1 if the command to be run is a builtin,
+** or 0 if it is not.
+*/
 int is_builtin(char *command)
 {
 	char *builtins[] = {"echo", "cd", "setenv", "unsetenv", "env", "exit"

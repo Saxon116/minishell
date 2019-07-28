@@ -6,13 +6,27 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 17:37:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/25 15:46:01 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/28 21:22:26 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int var_exists(t_shell *shell, char *var)
+/*
+** DESCRIPTION:
+** This function is only used in this file, and it checks if an
+** environment variable exists by taking the VAR_NAME=value format,
+** isolating the name, and calling check_env.
+**
+** RETURN VALUE:
+** If the variable exists, the function will return the index of
+** the variable's position in the array. Otherwise -1 is returned
+** since the returned value could be the 0th element of the array.
+**
+** EXTERNAL FUNCTIONS:
+** check_env function is located in env.c
+*/
+int check_env_with_val(t_shell *shell, char *var)
 {
 	int i;
 	char *name;
@@ -30,6 +44,48 @@ int var_exists(t_shell *shell, char *var)
 	return (i);
 }
 
+/*
+** DESCRIPTION:
+** This function changes the value of an existing environment
+** variable by taking the name and value to be overwritten.
+** If value is NULL, the function will assume that
+** the name parameter has the value within it in the
+** "NAME=value" format.
+**
+** EXTERNAL FUNCTIONS:
+** check_env function is located in env.c
+*/
+void set_existing_var(t_shell *shell, char *name, char* value)
+{
+	char var[1024];
+	int index;
+
+	ft_bzero(var, 1024);
+	index = value ? check_env(shell, name) : check_env_with_val(shell, name);
+	if(index != -1)
+	{
+		if(value)
+		{
+			ft_strcpy(var, name);
+			ft_strcat(var, "=");
+			ft_strcat(var, value);
+			free(shell->environ[index]);
+			shell->environ[index] = ft_strdup(var);
+		}
+		else
+		{
+			free(shell->environ[index]);
+			shell->environ[index] = ft_strdup(name);
+		}
+	}
+}
+
+/*
+** DESCRIPTION:
+** This function deletes an existing environment variable. The index
+** represents the position of the value to be deleted in the array.
+** A new string array is allocated without that value and returned.
+*/
 void del_env_var(t_shell *shell, int index)
 {
 	char **new_array;
@@ -57,6 +113,12 @@ void del_env_var(t_shell *shell, int index)
 	shell->environ = new_array;
 }
 
+/*
+** DESCRIPTION:
+** This function adds a new environment variable, or edits a variable
+** if it already exists by calling set_existing_var. A string in the
+** "VAR_NAME=value" format should be passed in var.
+*/
 void add_env_var(t_shell *shell, char *var)
 {
 	char **new_array;
@@ -65,17 +127,14 @@ void add_env_var(t_shell *shell, char *var)
 
 	length = 0;
 	i = 0;
-	if(var_exists(shell, var) != -1)
-	{
-		free(shell->environ[var_exists(shell, var)]);
-		shell->environ[var_exists(shell, var)] = ft_strdup(var);
-	}
+	if(check_env_with_val(shell, var) != -1)
+		set_existing_var(shell, var, NULL);
 	else
 	{
 		while(shell->environ[length])
-		length++;
+			length++;
 		if((new_array = malloc(sizeof(char**) * (length + 2))) == NULL)
-		return ;
+			return ;
 		while(i < length)
 		{
 			new_array[i] = ft_strdup(shell->environ[i]);
@@ -88,6 +147,14 @@ void add_env_var(t_shell *shell, char *var)
 	}
 }
 
+/*
+** DESCRIPTION:
+** This function returns a newly allocated copy of the string array
+** passed into it.
+**
+** RETURN VALUE:
+** On success, the copy of the string array. On error, NULL is returned.
+*/
 char **string_arr_cpy(char **array)
 {
 	char **new_array;
