@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/28 19:37:57 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/29 18:33:08 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,17 @@ char **replace_tilde(t_shell *shell, char **input)
 	while(input[length])
 		length++;
 	if(length < 2)
-		return (input);
+		return (NULL);
 	i = 1;
 	if(check_env(shell, "HOME") == -1)
 	{
 		ft_printf("HOME not set.\n");
-		return (input);
+		return (NULL);
 	}
 	new_array = string_arr_cpy(input);
 	while(input[i])
 	{
+		free(new_array[i]);
 		new_array[i] = replace_substring(input[i], "~", shell->home);
 		i++;
 	}
@@ -68,21 +69,36 @@ int is_dir(char *path)
 void parse_command(char **input, t_shell *shell)
 {
 	char *command_path;
+	char **new_input;
+	char **exec_paths;
+	int has_tilde;
 
-	input = replace_tilde(shell, input);
-	if(is_builtin(input[0]))
-		run_builtin(input, shell);
+	has_tilde = 1;
+	new_input = replace_tilde(shell, input);
+	if(!new_input)
+	{
+		new_input = input;
+		has_tilde = 0;
+	}
+	if(is_builtin(new_input[0]))
+		run_builtin(new_input, shell);
 	else
 	{
-		command_path = find_command(input[0], get_exec_paths(shell));
+		exec_paths = get_exec_paths(shell);
+		command_path = find_command(new_input[0], exec_paths);
 		if(!command_path)
-			ft_printf("minishell: %s: command not found\n", input[0]);
+			ft_printf("minishell: %s: command not found\n", new_input[0]);
 		else
 			if(is_dir(command_path))
 				ft_printf("minishell: %s: Is a directory\n", command_path);
 			else
-				run(command_path, input, shell->environ);
+				run(command_path, new_input, shell->environ);
+		if(exec_paths)
+			free_string_array(exec_paths);
+		free(command_path);
 	}
+	if(has_tilde)
+		free_string_array(new_input);
 }
 
 char *search_command(char *name, char *exec_path)
@@ -104,12 +120,19 @@ char *search_command(char *name, char *exec_path)
 		{
 			ft_strcat(path, pdirent->d_name);
 			if (lstat(path, &pstat) == -1)
+			{
+				closedir(pdir);
 				return (0);
+			}
 			if(access(path, X_OK) != -1)
+			{
+				closedir(pdir);
 				return (ft_strdup(path));
+			}
 			ft_bzero(path + ft_strlen(exec_path) + 1, ft_strlen(pdirent->d_name));
 		}
 	}
+	closedir(pdir);
 	return (NULL);
 }
 

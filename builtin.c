@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/28 21:26:49 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/29 18:26:28 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,13 @@ int ft_setenv(t_shell *shell, char **input)
 	length = 0;
 	while(new_var[length])
 		length++;
+	free_string_array(new_var);
 	if(length != 2)
 	{
 		ft_printf("Cannot have an empty field.\
 		\nusage: setenv VARNAME=value\n");
 		return (0);
 	}
-	free(new_var);
 	add_env_var(shell, input[1]);
 	return (1);
 }
@@ -124,7 +124,10 @@ int run_builtin(char **input, t_shell *shell)
 	if(ft_strcmp(input[0], "echo") == 0)
 		echo(input);
 	if(ft_strcmp(input[0], "exit") == 0)
+	{
+		free_shell_vars(shell);
 		exit(0);
+	}
 	if(ft_strcmp(input[0], "env") == 0)
 		print_char_array(shell->environ);
 	if(ft_strcmp(input[0], "setenv") == 0)

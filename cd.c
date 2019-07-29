@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/28 19:16:10 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/29 17:36:09 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int cd(char **input, t_shell *shell)
 		shell->oldpwd = ft_strdup(shell->pwd);
 		free(shell->pwd);
 		shell->pwd = ft_strdup(path);
+		free(path);
 		set_existing_var(shell, "OLDPWD", shell->oldpwd);
 		set_existing_var(shell, "PWD", shell->pwd);
 	}

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/28 19:08:04 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/29 18:08:48 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,35 @@ char *replace_substring(char *str, char *substr, char *rep)
 	free(start);
 	free(middle);
 	return (newstr);
+}
+
+void free_string_array(char **array)
+{
+	int i;
+
+	i = 0;
+	if(array)
+	{
+		while(array[i])
+		{
+			free(array[i]);
+			i++;
+		}
+		free(array);
+	}
+}
+
+void free_shell_vars(t_shell *shell)
+{
+	if(shell->home)
+		free(shell->home);
+	if(shell->pwd)
+		free(shell->pwd);
+	if(shell->oldpwd)
+		free(shell->oldpwd);
+	if(shell->environ)
+		free_string_array(shell->environ);
+	free(shell);
 }
 
 void print_char_array(char **array)
@@ -73,6 +102,7 @@ int main()
 	t_shell *shell;
 	char cwd[1024];
 	char *cwd_home;
+	char **input;
 	extern char **environ;
 
 	if((shell = malloc(sizeof(t_shell))) == NULL)
@@ -83,20 +113,25 @@ int main()
 	shell->pwd = ft_strdup(cwd);
 	shell->oldpwd = ft_strdup(cwd);
 	cwd_home = replace_substring(cwd, shell->home, "~");
+	free(shell->home);
 	ft_printf(YELLOWBLUE"%s -->"RESET" ", cwd_home);
 	while(1)
 	{
 		if(get_next_line(0, &line))
 		{
-			char **input = ft_strsplit(line, " \t");
+			input = ft_strsplit(line, " \t");
+			free(line);
+			free(cwd_home);
+			shell->home = ft_getenv(shell, "HOME");
 			if(input[0])
 				parse_command(input, shell);
+			free_string_array(input);
 			getcwd(cwd, 1024);
-			shell->home = ft_getenv(shell, "HOME");
 			cwd_home = replace_substring(cwd, shell->home, "~");
+			free(shell->home);
+			shell->home = NULL;
 			ft_printf(YELLOWBLUE"%s -->"RESET" ", cwd_home);
 		}
-		free(line);
 	}
 	return 0;
 }

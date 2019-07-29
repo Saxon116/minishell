@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 17:37:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/28 21:22:26 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/07/29 18:20:27 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void del_env_var(t_shell *shell, int index)
 		j++;
 	}
 	new_array[i] = NULL;
-	free(shell->environ);
+	free_string_array(shell->environ);
 	shell->environ = new_array;
 }
 
@@ -142,7 +142,7 @@ void add_env_var(t_shell *shell, char *var)
 		}
 		new_array[i] = ft_strdup(var);
 		new_array[length + 1] = NULL;
-		free(shell->environ);
+		free_string_array(shell->environ);
 		shell->environ = new_array;
 	}
 }
