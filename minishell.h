@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/29 15:45:28 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/01 15:23:19 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ char *replace_substring(char *str, char *substr, char *rep);
 void set_existing_var(t_shell *shell, char *name, char* value);
 void free_shell_vars(t_shell *shell);
 void free_string_array(char **array);
+char **replace_dollar_env(t_shell *shell, char **input);
+
 
 
 

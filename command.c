@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/29 18:33:08 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/01 17:05:17 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@ char **replace_tilde(t_shell *shell, char **input)
 	if(length < 2)
 		return (NULL);
 	i = 1;
-	if(check_env(shell, "HOME") == -1)
-	{
-		ft_printf("HOME not set.\n");
-		return (NULL);
-	}
 	new_array = string_arr_cpy(input);
 	while(input[i])
 	{
 		free(new_array[i]);
+		if(contains(input[i], '~') && check_env(shell, "HOME") == -1)
+		{
+			ft_printf("HOME not set.\n");
+			return (NULL);
+		}
 		new_array[i] = replace_substring(input[i], "~", shell->home);
 		i++;
 	}
@@ -70,11 +70,14 @@ void parse_command(char **input, t_shell *shell)
 {
 	char *command_path;
 	char **new_input;
+	char **temp;
 	char **exec_paths;
 	int has_tilde;
 
 	has_tilde = 1;
-	new_input = replace_tilde(shell, input);
+	temp = replace_tilde(shell, input);
+	new_input = replace_dollar_env(shell, temp);
+	free(temp);
 	if(!new_input)
 	{
 		new_input = input;
