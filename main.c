@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:59:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/29 18:08:48 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/02 17:04:59 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void free_shell_vars(t_shell *shell)
 		free(shell->oldpwd);
 	if(shell->environ)
 		free_string_array(shell->environ);
+	if(shell->input)
+		free_string_array(shell->input);
 	free(shell);
 }
 
@@ -102,7 +104,6 @@ int main()
 	t_shell *shell;
 	char cwd[1024];
 	char *cwd_home;
-	char **input;
 	extern char **environ;
 
 	if((shell = malloc(sizeof(t_shell))) == NULL)
@@ -119,13 +120,13 @@ int main()
 	{
 		if(get_next_line(0, &line))
 		{
-			input = ft_strsplit(line, " \t");
+			shell->input = ft_strsplit(line, " \t");
 			free(line);
 			free(cwd_home);
 			shell->home = ft_getenv(shell, "HOME");
-			if(input[0])
-				parse_command(input, shell);
-			free_string_array(input);
+			if(shell->input[0])
+				parse_command(shell);
+			free_string_array(shell->input);
 			getcwd(cwd, 1024);
 			cwd_home = replace_substring(cwd, shell->home, "~");
 			free(shell->home);

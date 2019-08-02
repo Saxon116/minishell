@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/01 17:05:17 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/02 17:04:14 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,49 +66,63 @@ int is_dir(char *path)
 	}
 }
 
-void parse_command(char **input, t_shell *shell)
+void replace_input(t_shell *shell)
 {
-	char *command_path;
 	char **new_input;
 	char **temp;
-	char **exec_paths;
-	int has_tilde;
 
-	has_tilde = 1;
-	temp = replace_tilde(shell, input);
-	new_input = replace_dollar_env(shell, temp);
-	free(temp);
-	if(!new_input)
+	temp = replace_tilde(shell, shell->input);
+	if(!temp)
+		new_input = replace_dollar_env(shell, shell->input);
+	else
+		new_input = replace_dollar_env(shell, temp);
+	if(new_input)
 	{
-		new_input = input;
-		has_tilde = 0;
+		free_string_array(shell->input);
+		shell->input = new_input;
+		free_string_array(temp);
+		temp = NULL;
 	}
-	if(is_builtin(new_input[0]))
-		run_builtin(new_input, shell);
+	else
+	{
+		if(temp)
+		{
+			free_string_array(shell->input);
+			shell->input = temp;
+		}
+	}
+
+}
+
+void parse_command(t_shell *shell)
+{
+	char *command_path;
+	char **exec_paths;
+
+	replace_input(shell);
+	if(is_builtin(shell->input[0]))
+		run_builtin(shell);
 	else
 	{
 		exec_paths = get_exec_paths(shell);
-		command_path = find_command(new_input[0], exec_paths);
+		command_path = find_command(shell->input[0], exec_paths);
 		if(!command_path)
-			ft_printf("minishell: %s: command not found\n", new_input[0]);
+			ft_printf("minishell: %s: command not found\n", shell->input[0]);
 		else
 			if(is_dir(command_path))
 				ft_printf("minishell: %s: Is a directory\n", command_path);
 			else
-				run(command_path, new_input, shell->environ);
+				run(command_path, shell->input, shell->environ);
 		if(exec_paths)
 			free_string_array(exec_paths);
 		free(command_path);
 	}
-	if(has_tilde)
-		free_string_array(new_input);
 }
 
 char *search_command(char *name, char *exec_path)
 {
 	DIR *pdir;
 	struct dirent *pdirent;
-	struct stat		pstat;
 	char path[1024];
 
 	ft_strcpy(path, exec_path);
@@ -122,11 +136,6 @@ char *search_command(char *name, char *exec_path)
 		&& pdirent->d_type != DT_DIR)
 		{
 			ft_strcat(path, pdirent->d_name);
-			if (lstat(path, &pstat) == -1)
-			{
-				closedir(pdir);
-				return (0);
-			}
 			if(access(path, X_OK) != -1)
 			{
 				closedir(pdir);

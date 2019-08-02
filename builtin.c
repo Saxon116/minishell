@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/29 18:26:28 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/02 16:41:16 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,20 @@ void echo(char **input)
 ** EXTERNAL FUNCTIONS:
 ** add_env_var is located in edit_env.c
 */
-int ft_setenv(t_shell *shell, char **input)
+int ft_setenv(t_shell *shell)
 {
 	int length;
 	char **new_var;
 
 	length = 0;
-	while(input[length])
+	while(shell->input[length])
 		length++;
 	if(length != 2)
 	{
 		ft_printf("usage: setenv VARNAME=value\n");
 		return (0);
 	}
-	new_var = ft_strsplit(input[1], "=");
+	new_var = ft_strsplit(shell->input[1], "=");
 	length = 0;
 	while(new_var[length])
 		length++;
@@ -68,7 +68,7 @@ int ft_setenv(t_shell *shell, char **input)
 		\nusage: setenv VARNAME=value\n");
 		return (0);
 	}
-	add_env_var(shell, input[1]);
+	add_env_var(shell, shell->input[1]);
 	return (1);
 }
 
@@ -84,23 +84,23 @@ int ft_setenv(t_shell *shell, char **input)
 ** EXTERNAL FUNCTIONS:
 ** cd function is located in cd.c
 */
-int ft_unsetenv(t_shell *shell, char **input)
+int ft_unsetenv(t_shell *shell)
 {
 	int length;
 	int index;
 
 	length = 0;
-	while(input[length])
+	while(shell->input[length])
 		length++;
 	if(length != 2)
 	{
 		ft_printf("usage: unsetenv VARNAME\n");
 		return (0);
 	}
-	index = check_env(shell, input[1]);
+	index = check_env(shell, shell->input[1]);
 	if(index == -1)
 	{
-		ft_printf("%s is not set.\n", input[1]);
+		ft_printf("%s is not set.\n", shell->input[1]);
 		return (0);
 	}
 	del_env_var(shell, index);
@@ -117,23 +117,23 @@ int ft_unsetenv(t_shell *shell, char **input)
 ** EXTERNAL FUNCTIONS:
 ** cd function is located in cd.c
 */
-int run_builtin(char **input, t_shell *shell)
+int run_builtin(t_shell *shell)
 {
-	if(ft_strcmp(input[0], "cd") == 0)
-		return (cd(input, shell));
-	if(ft_strcmp(input[0], "echo") == 0)
-		echo(input);
-	if(ft_strcmp(input[0], "exit") == 0)
+	if(ft_strcmp(shell->input[0], "cd") == 0)
+		return (cd(shell));
+	if(ft_strcmp(shell->input[0], "echo") == 0)
+		echo(shell->input);
+	if(ft_strcmp(shell->input[0], "exit") == 0)
 	{
 		free_shell_vars(shell);
 		exit(0);
 	}
-	if(ft_strcmp(input[0], "env") == 0)
+	if(ft_strcmp(shell->input[0], "env") == 0)
 		print_char_array(shell->environ);
-	if(ft_strcmp(input[0], "setenv") == 0)
-		ft_setenv(shell, input);
-	if(ft_strcmp(input[0], "unsetenv") == 0)
-		ft_unsetenv(shell, input);
+	if(ft_strcmp(shell->input[0], "setenv") == 0)
+		ft_setenv(shell);
+	if(ft_strcmp(shell->input[0], "unsetenv") == 0)
+		ft_unsetenv(shell);
 	return (0);
 }
 

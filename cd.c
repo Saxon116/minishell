@@ -6,13 +6,13 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/29 17:36:09 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/02 16:41:02 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int cd(char **input, t_shell *shell)
+int cd(t_shell *shell)
 {
 	char *path;
 	int length;
@@ -20,7 +20,7 @@ int cd(char **input, t_shell *shell)
 	char *temp;
 
 	length = 0;
-	while(input[length])
+	while(shell->input[length])
 		length++;
 	if(length >= 3)
 	{
@@ -29,7 +29,7 @@ int cd(char **input, t_shell *shell)
 	}
 	if(length == 2)
 	{
-		if(ft_strcmp(input[1], "-") == 0)
+		if(ft_strcmp(shell->input[1], "-") == 0)
 		{
 			temp = ft_strdup(shell->oldpwd);
 			free(shell->oldpwd);
@@ -43,17 +43,18 @@ int cd(char **input, t_shell *shell)
 			chdir(shell->pwd);
 			return (0);
 		}
-		if(access(input[1], F_OK) == -1)
+		if(access(shell->input[1], F_OK) == -1)
 		{
-			ft_printf("minishell: cd: %s: No such file or directory\n", input[1]);
+			ft_printf("minishell: cd: %s: No such file or directory\n",
+			shell->input[1]);
 			return (0);
 		}
-		if(access(input[1], X_OK) == -1)
+		if(access(shell->input[1], X_OK) == -1)
 		{
-			ft_printf("minishell: cd: %s: Permission denied\n", input[1]);
+			ft_printf("minishell: cd: %s: Permission denied\n", shell->input[1]);
 			return (0);
 		}
-		chdir(input[1]);
+		chdir(shell->input[1]);
 		getcwd(cwd, 1024);
 		free(shell->oldpwd);
 		shell->oldpwd = ft_strdup(shell->pwd);
