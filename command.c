@@ -6,39 +6,22 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/02 17:04:14 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/05 16:53:17 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **replace_tilde(t_shell *shell, char **input)
-{
-	int i;
-	int length;
-	char **new_array;
-
-	length = 0;
-	while(input[length])
-		length++;
-	if(length < 2)
-		return (NULL);
-	i = 1;
-	new_array = string_arr_cpy(input);
-	while(input[i])
-	{
-		free(new_array[i]);
-		if(contains(input[i], '~') && check_env(shell, "HOME") == -1)
-		{
-			ft_printf("HOME not set.\n");
-			return (NULL);
-		}
-		new_array[i] = replace_substring(input[i], "~", shell->home);
-		i++;
-	}
-	return (new_array);
-}
-
+/*
+** DESCRIPTION:
+** This function checks if the path specified is a directory.
+** If it is a symbolic link, it will check if the symbolic link
+** points to a directory.
+**
+** RETURN VALUE:
+** If the path specified is a directory, 1 is returned. Otherwise,
+** 0 is returned.
+*/
 int is_dir(char *path)
 {
 	char temp_buf[1024];
@@ -46,7 +29,7 @@ int is_dir(char *path)
 	struct stat		pstat;
 	int len;
 
-	bzero(buf, 1024);
+	ft_bzero(buf, 1024);
 	lstat(path, &pstat);
 	if (lstat(path, &pstat) == -1)
 		return (0);
@@ -66,6 +49,17 @@ int is_dir(char *path)
 	}
 }
 
+/*
+** DESCRIPTION:
+** This function replaces any tildes with the HOME value,
+** or any environment variable name with a dollar in front
+** with its value. The changes are stored in the input
+** variable of the shell structure.
+**
+** EXTERNAL FUNCTIONS:
+** replace_tilde is located in replace.c
+** replace_dollar_env is located in replace.c
+*/
 void replace_input(t_shell *shell)
 {
 	char **new_input;
@@ -91,9 +85,19 @@ void replace_input(t_shell *shell)
 			shell->input = temp;
 		}
 	}
-
 }
 
+/*
+** DESCRIPTION:
+** This function parses the command given to minishell and runs
+** the appropriate command if it is available.
+**
+** EXTERNAL FUNCTIONS:
+** is_builtin is located in builtin.c
+** run_builtin is located in builtin.c
+** run is located in shell.c
+** get_exec_paths is located in env.c
+*/
 void parse_command(t_shell *shell)
 {
 	char *command_path;
@@ -119,6 +123,15 @@ void parse_command(t_shell *shell)
 	}
 }
 
+/*
+** DESCRIPTION:
+** This function takes the name of a binary and the path
+** of a directly and looks for the binary in it.
+**
+** RETURN VALUE:
+** If the binary is found, the absolute path of the binary
+** is returned. Otherwise, NULL is returned.
+*/
 char *search_command(char *name, char *exec_path)
 {
 	DIR *pdir;
@@ -148,6 +161,21 @@ char *search_command(char *name, char *exec_path)
 	return (NULL);
 }
 
+/*
+** DESCRIPTION:
+** This function takes the name of the binary to be run
+** as well as the directories specified in PATH to look
+** for the correct binary and run it.
+** Binaries can be run in three ways:
+** 1) The absolute path of the binary is given.
+** 2) The relative path of the binary is given (./binary).
+** 3) The binary name is given and it is located in
+** one of the directories specified in PATH.
+**
+** RETURN VALUE:
+** If the binary is found and is valid, the absolute path of
+** the binary is returned. Otherwise, NULL is returned.
+*/
 char *find_command(char *name, char **exec_paths)
 {
 	int i;

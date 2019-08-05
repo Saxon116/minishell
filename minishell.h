@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:10:37 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/02 16:41:09 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/05 16:54:18 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define BOLDMAGENTA	"\033[1;35m"
 # define BOLDCYAN		"\033[1;36m"
 # define BOLDWHITE		"\033[1;37m"
-# define YELLOWBLUE		"\033[30;46m"
+# define LIGHTBLUE		"\033[94m"
 # define BLUEBLUE		"\033[34;46m"
 # define BOLDCYANGREEN	"\033[1;36;42m"
 # define REDBLACK		"\033[30;41m"
@@ -59,11 +59,16 @@ void add_env_var(t_shell *shell, char *var);
 int check_env(t_shell *shell, char *name);
 void del_env_var(t_shell *shell, int index);
 int ft_setenv(t_shell *shell);
-char *replace_substring(char *str, char *substr, char *rep);
 void set_existing_var(t_shell *shell, char *name, char* value);
 void free_shell_vars(t_shell *shell);
 void free_string_array(char **array);
 char **replace_dollar_env(t_shell *shell, char **input);
+t_shell *init_shell();
+void display_prompt(t_shell *shell);
+char **replace_tilde(t_shell *shell, char **input);
+
+
+
 
 
 

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/02 16:41:16 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/05 15:11:05 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void echo(char **input)
 /*
 ** DESCRIPTION:
 ** This function checks if the new environment variable is in the
-** correct "VAR_NAME=value" format before calling the add_env_var
+** correct "VARNAME=value" format before calling the add_env_var
 ** function to save the new value into the environ array.
 **
 ** RETURN VALUE:
@@ -129,7 +129,7 @@ int run_builtin(t_shell *shell)
 		exit(0);
 	}
 	if(ft_strcmp(shell->input[0], "env") == 0)
-		print_char_array(shell->environ);
+		print_string_array(shell->environ);
 	if(ft_strcmp(shell->input[0], "setenv") == 0)
 		ft_setenv(shell);
 	if(ft_strcmp(shell->input[0], "unsetenv") == 0)

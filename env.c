@@ -6,12 +6,23 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:13:16 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/26 18:16:32 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/05 17:49:41 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+** DESCRIPTION:
+** This function checks if the environment variable passed
+** into the name argument exists. The format given can be
+** NAME or NAME=value.
+**
+** RETURN VALUE:
+** If the variable exists, the function will return the index of
+** the variable's position in the array. Otherwise -1 is returned
+** since the returned value could be the 0th element of the array.
+*/
 int check_env(t_shell *shell, char *name)
 {
 	int i;
@@ -34,6 +45,16 @@ int check_env(t_shell *shell, char *name)
 		return (-1);
 }
 
+/*
+** DESCRIPTION:
+** This function takes the name of an environment variable
+** as an argument and returns that variable's value as an
+** allocated string.
+**
+** RETURN VALUE:
+** If the variable exists, the function will return the value
+** of the environment variable. Otherwise, NULL is returned.
+*/
 char *ft_getenv(t_shell *shell, char *name)
 {
   int i;
@@ -51,6 +72,15 @@ char *ft_getenv(t_shell *shell, char *name)
 		return (NULL);
 }
 
+/*
+** DESCRIPTION:
+** This function returns a string array containing the paths
+** of the directories specified in the PATH environment variable.
+**
+** RETURN VALUE:
+** If the PATH variable exists, the function will return the
+** string array. Otherwise, NULL is returned.
+*/
 char **get_exec_paths(t_shell *shell)
 {
 	int index;

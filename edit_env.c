@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 17:37:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/29 18:20:27 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/05 15:10:21 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** DESCRIPTION:
 ** This function is only used in this file, and it checks if an
-** environment variable exists by taking the VAR_NAME=value format,
+** environment variable exists by taking the VARNAME=value format,
 ** isolating the name, and calling check_env.
 **
 ** RETURN VALUE:
@@ -117,7 +117,7 @@ void del_env_var(t_shell *shell, int index)
 ** DESCRIPTION:
 ** This function adds a new environment variable, or edits a variable
 ** if it already exists by calling set_existing_var. A string in the
-** "VAR_NAME=value" format should be passed in var.
+** "VARNAME=value" format should be passed in var.
 */
 void add_env_var(t_shell *shell, char *var)
 {
@@ -145,33 +145,4 @@ void add_env_var(t_shell *shell, char *var)
 		free_string_array(shell->environ);
 		shell->environ = new_array;
 	}
-}
-
-/*
-** DESCRIPTION:
-** This function returns a newly allocated copy of the string array
-** passed into it.
-**
-** RETURN VALUE:
-** On success, the copy of the string array. On error, NULL is returned.
-*/
-char **string_arr_cpy(char **array)
-{
-	char **new_array;
-	int length;
-	int i;
-
-	length = 0;
-	i = 0;
-	while(array[length])
-		length++;
-	if((new_array = malloc(sizeof(char *) * (length + 1))) == NULL)
-		return (NULL);
-	while(i < length)
-	{
-		new_array[i] = ft_strdup(array[i]);
-		i++;
-	}
-	new_array[i] = 0;
-	return (new_array);
 }

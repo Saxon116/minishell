@@ -6,7 +6,7 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/07/10 16:00:36 by nkellum          ###   ########.fr        #
+#    Updated: 2019/08/05 15:40:46 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,12 @@ ft_strtrim.c \
 ft_tolower.c \
 ft_toupper.c \
 ft_constrain.c \
-get_next_line.c
+get_next_line.c \
+replace_substring.c \
+print_string_array.c \
+string_arr_cpy.c \
+free_string_array.c
+
 
 SRC_PRINTF = flag_init_priority.c parse_flags.c print_arg.c print_double.c \
 ft_printf.c print_hex.c undefined.c print_string.c print_octal.c \

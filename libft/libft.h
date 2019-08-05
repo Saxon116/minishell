@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/13 15:40:16 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/21 17:04:10 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/05 15:40:30 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,9 @@ int					ft_min(int a, int b);
 int					ft_square(int n);
 int					ft_constrain(int val, int min, int max);
 int					get_next_line(const int fd, char **line);
-
+char				*replace_substring(char *str, char *substr, char *rep);
+void				print_string_array(char **array);
+char				**string_arr_cpy(char **array);
+void				free_string_array(char **array);
 
 #endif
