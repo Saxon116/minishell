@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 17:37:25 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 15:10:21 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 12:36:53 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@
 ** EXTERNAL FUNCTIONS:
 ** check_env function is located in env.c
 */
-int check_env_with_val(t_shell *shell, char *var)
+
+int		check_env_with_val(t_shell *shell, char *var)
 {
-	int i;
-	char *name;
+	int		i;
+	char	*name;
 
 	i = 0;
-	while(var[i])
+	while (var[i])
 	{
-		if(var[i] == '=')
-		break;
+		if (var[i] == '=')
+			break ;
 		i++;
 	}
 	name = ft_strsub(var, 0, i);
@@ -55,16 +56,17 @@ int check_env_with_val(t_shell *shell, char *var)
 ** EXTERNAL FUNCTIONS:
 ** check_env function is located in env.c
 */
-void set_existing_var(t_shell *shell, char *name, char* value)
+
+void	set_existing_var(t_shell *shell, char *name, char *value)
 {
-	char var[1024];
-	int index;
+	char	var[1024];
+	int		index;
 
 	ft_bzero(var, 1024);
 	index = value ? check_env(shell, name) : check_env_with_val(shell, name);
-	if(index != -1)
+	if (index != -1)
 	{
-		if(value)
+		if (value)
 		{
 			ft_strcpy(var, name);
 			ft_strcat(var, "=");
@@ -86,23 +88,24 @@ void set_existing_var(t_shell *shell, char *name, char* value)
 ** represents the position of the value to be deleted in the array.
 ** A new string array is allocated without that value and returned.
 */
-void del_env_var(t_shell *shell, int index)
+
+void	del_env_var(t_shell *shell, int index)
 {
-	char **new_array;
-	int length;
-	int i;
-	int j;
+	char	**new_array;
+	int		length;
+	int		i;
+	int		j;
 
 	length = 0;
 	i = 0;
 	j = 0;
-	while(shell->environ[length])
+	while (shell->environ[length])
 		length++;
-	if((new_array = malloc(sizeof(char**) * length)) == NULL)
+	if ((new_array = malloc(sizeof(char**) * length)) == NULL)
 		return ;
-	while(i < length - 1)
+	while (i < length - 1)
 	{
-		if(j == index)
+		if (j == index)
 			j++;
 		new_array[i] = ft_strdup(shell->environ[j]);
 		i++;
@@ -119,23 +122,24 @@ void del_env_var(t_shell *shell, int index)
 ** if it already exists by calling set_existing_var. A string in the
 ** "VARNAME=value" format should be passed in var.
 */
-void add_env_var(t_shell *shell, char *var)
+
+void	add_env_var(t_shell *shell, char *var)
 {
-	char **new_array;
-	int length;
-	int i;
+	char	**new_array;
+	int		length;
+	int		i;
 
 	length = 0;
 	i = 0;
-	if(check_env_with_val(shell, var) != -1)
+	if (check_env_with_val(shell, var) != -1)
 		set_existing_var(shell, var, NULL);
 	else
 	{
-		while(shell->environ[length])
+		while (shell->environ[length])
 			length++;
-		if((new_array = malloc(sizeof(char**) * (length + 2))) == NULL)
+		if ((new_array = malloc(sizeof(char**) * (length + 2))) == NULL)
 			return ;
-		while(i < length)
+		while (i < length)
 		{
 			new_array[i] = ft_strdup(shell->environ[i]);
 			i++;

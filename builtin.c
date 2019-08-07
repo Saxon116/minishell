@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 15:11:05 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 11:59:45 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,15 @@
 ** This function implements the most basic echo command by printing
 ** the arguments that are sent into it.
 */
-void echo(char **input)
+
+void	echo(char **input)
 {
-	int i;
+	int	i;
 
 	i = 1;
-	while(input[i])
+	while (input[i])
 	{
-		if(i != 1)
+		if (i != 1)
 			ft_printf(" ");
 		ft_printf(input[i]);
 		i++;
@@ -44,25 +45,26 @@ void echo(char **input)
 ** EXTERNAL FUNCTIONS:
 ** add_env_var is located in edit_env.c
 */
-int ft_setenv(t_shell *shell)
+
+int		ft_setenv(t_shell *shell)
 {
-	int length;
-	char **new_var;
+	int		length;
+	char	**new_var;
 
 	length = 0;
-	while(shell->input[length])
+	while (shell->input[length])
 		length++;
-	if(length != 2)
+	if (length != 2)
 	{
 		ft_printf("usage: setenv VARNAME=value\n");
 		return (0);
 	}
 	new_var = ft_strsplit(shell->input[1], "=");
 	length = 0;
-	while(new_var[length])
+	while (new_var[length])
 		length++;
 	free_string_array(new_var);
-	if(length != 2)
+	if (length != 2)
 	{
 		ft_printf("Cannot have an empty field.\
 		\nusage: setenv VARNAME=value\n");
@@ -84,21 +86,22 @@ int ft_setenv(t_shell *shell)
 ** EXTERNAL FUNCTIONS:
 ** cd function is located in cd.c
 */
-int ft_unsetenv(t_shell *shell)
+
+int		ft_unsetenv(t_shell *shell)
 {
 	int length;
 	int index;
 
 	length = 0;
-	while(shell->input[length])
+	while (shell->input[length])
 		length++;
-	if(length != 2)
+	if (length != 2)
 	{
 		ft_printf("usage: unsetenv VARNAME\n");
 		return (0);
 	}
 	index = check_env(shell, shell->input[1]);
-	if(index == -1)
+	if (index == -1)
 	{
 		ft_printf("%s is not set.\n", shell->input[1]);
 		return (0);
@@ -117,22 +120,23 @@ int ft_unsetenv(t_shell *shell)
 ** EXTERNAL FUNCTIONS:
 ** cd function is located in cd.c
 */
-int run_builtin(t_shell *shell)
+
+int		run_builtin(t_shell *shell)
 {
-	if(ft_strcmp(shell->input[0], "cd") == 0)
+	if (ft_strcmp(shell->input[0], "cd") == 0)
 		return (cd(shell));
-	if(ft_strcmp(shell->input[0], "echo") == 0)
+	if (ft_strcmp(shell->input[0], "echo") == 0)
 		echo(shell->input);
-	if(ft_strcmp(shell->input[0], "exit") == 0)
+	if (ft_strcmp(shell->input[0], "exit") == 0)
 	{
 		free_shell_vars(shell);
 		exit(0);
 	}
-	if(ft_strcmp(shell->input[0], "env") == 0)
+	if (ft_strcmp(shell->input[0], "env") == 0)
 		print_string_array(shell->environ);
-	if(ft_strcmp(shell->input[0], "setenv") == 0)
+	if (ft_strcmp(shell->input[0], "setenv") == 0)
 		ft_setenv(shell);
-	if(ft_strcmp(shell->input[0], "unsetenv") == 0)
+	if (ft_strcmp(shell->input[0], "unsetenv") == 0)
 		ft_unsetenv(shell);
 	return (0);
 }
@@ -146,16 +150,25 @@ int run_builtin(t_shell *shell)
 ** It returns 1 if the command to be run is a builtin,
 ** or 0 if it is not.
 */
-int is_builtin(char *command)
+
+int		is_builtin(char *command)
 {
-	char *builtins[] = {"echo", "cd", "setenv", "unsetenv", "env", "exit"
-, 0};
-	int i;
+	int	i;
 
 	i = 0;
-	while(builtins[i])
+	while (builtins[i])
 	{
-		if(ft_strcmp(command, builtins[i]) == 0)
+		if (ft_strcmp(command, "echo") == 0)
+			return (1);
+		if (ft_strcmp(command, "cd") == 0)
+			return (1);
+		if (ft_strcmp(command, "exit") == 0)
+			return (1);
+		if (ft_strcmp(command, "setenv") == 0)
+			return (1);
+		if (ft_strcmp(command, "unsetenv") == 0)
+			return (1);
+		if (ft_strcmp(command, "env") == 0)
 			return (1);
 		i++;
 	}

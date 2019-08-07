@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/01 13:04:45 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 17:57:23 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 12:47:43 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@
 ** If the allocation succeeds, the new instance of a shell
 ** struct is returned. Otherwise, 0 is returned.
 */
-t_shell *init_shell()
-{
-	t_shell *shell;
-	char cwd[1024];
-	extern char **environ;
 
-	if((shell = malloc(sizeof(t_shell))) == NULL)
+t_shell	*init_shell(void)
+{
+	t_shell		*shell;
+	char		cwd[1024];
+	extern char	**environ;
+
+	if ((shell = malloc(sizeof(t_shell))) == NULL)
 		return (0);
 	shell->environ = string_arr_cpy(environ);
 	shell->home = ft_getenv(shell, "HOME");
@@ -43,10 +44,11 @@ t_shell *init_shell()
 ** the current working directory. If the HOME directory is found
 ** in the CWD, it is replaced by tilde.
 */
-void display_prompt(t_shell *shell)
+
+void	display_prompt(t_shell *shell)
 {
-	char cwd[1024];
-	char *cwd_home;
+	char	cwd[1024];
+	char	*cwd_home;
 
 	getcwd(cwd, 1024);
 	cwd_home = replace_substring(cwd, shell->home, "~");
@@ -61,17 +63,18 @@ void display_prompt(t_shell *shell)
 ** This function frees the contents of the shell struct as
 ** well as the struct itself.
 */
-void free_shell_vars(t_shell *shell)
+
+void	free_shell_vars(t_shell *shell)
 {
-	if(shell->home)
+	if (shell->home)
 		free(shell->home);
-	if(shell->pwd)
+	if (shell->pwd)
 		free(shell->pwd);
-	if(shell->oldpwd)
+	if (shell->oldpwd)
 		free(shell->oldpwd);
-	if(shell->environ)
+	if (shell->environ)
 		free_string_array(shell->environ);
-	if(shell->input)
+	if (shell->input)
 		free_string_array(shell->input);
 	free(shell);
 }
@@ -84,14 +87,15 @@ void free_shell_vars(t_shell *shell)
 ** binary. Once the binary is done running, the process
 ** is terminated. The parent process will wait for the
 ** child process to finish by using waitpid().
-*
+**
 ** RETURN VALUE:
 ** If the new process was created succesfully, 1 is returned.
 ** Otherwise, 0 is returned.
 */
-int run(char *filename, char **args, char **environ)
+
+int		run(char *filename, char **args, char **environ)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)

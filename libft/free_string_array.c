@@ -6,20 +6,20 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/05 15:40:03 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 15:40:13 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 11:45:32 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void free_string_array(char **array)
+void	free_string_array(char **array)
 {
 	int i;
 
 	i = 0;
-	if(array)
+	if (array)
 	{
-		while(array[i])
+		while (array[i])
 		{
 			free(array[i]);
 			i++;

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 16:43:24 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 16:53:17 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 12:34:47 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,26 @@
 ** If the path specified is a directory, 1 is returned. Otherwise,
 ** 0 is returned.
 */
-int is_dir(char *path)
+
+int		is_dir(char *path)
 {
-	char temp_buf[1024];
-	char buf[1024];
-	struct stat		pstat;
-	int len;
+	char		temp_buf[1024];
+	char		buf[1024];
+	struct stat	pstat;
+	int			len;
 
 	ft_bzero(buf, 1024);
 	lstat(path, &pstat);
 	if (lstat(path, &pstat) == -1)
 		return (0);
-	if(!S_ISLNK(pstat.st_mode))
+	if (!S_ISLNK(pstat.st_mode))
 		return (S_ISDIR(pstat.st_mode));
 	else
 	{
 		len = readlink(path, temp_buf, 1023);
 		if (len != -1)
 			temp_buf[len] = '\0';
-		if(temp_buf[0] != '/')
+		if (temp_buf[0] != '/')
 			buf[0] = '/';
 		ft_strcat(buf, temp_buf);
 		if (lstat(buf, &pstat) == -1)
@@ -60,17 +61,18 @@ int is_dir(char *path)
 ** replace_tilde is located in replace.c
 ** replace_dollar_env is located in replace.c
 */
-void replace_input(t_shell *shell)
+
+void	replace_input(t_shell *shell)
 {
-	char **new_input;
-	char **temp;
+	char	**new_input;
+	char	**temp;
 
 	temp = replace_tilde(shell, shell->input);
-	if(!temp)
+	if (!temp)
 		new_input = replace_dollar_env(shell, shell->input);
 	else
 		new_input = replace_dollar_env(shell, temp);
-	if(new_input)
+	if (new_input)
 	{
 		free_string_array(shell->input);
 		shell->input = new_input;
@@ -79,7 +81,7 @@ void replace_input(t_shell *shell)
 	}
 	else
 	{
-		if(temp)
+		if (temp)
 		{
 			free_string_array(shell->input);
 			shell->input = temp;
@@ -98,26 +100,29 @@ void replace_input(t_shell *shell)
 ** run is located in shell.c
 ** get_exec_paths is located in env.c
 */
-void parse_command(t_shell *shell)
+
+void	parse_command(t_shell *shell)
 {
-	char *command_path;
-	char **exec_paths;
+	char	*command_path;
+	char	**exec_paths;
 
 	replace_input(shell);
-	if(is_builtin(shell->input[0]))
+	if (is_builtin(shell->input[0]))
 		run_builtin(shell);
 	else
 	{
 		exec_paths = get_exec_paths(shell);
 		command_path = find_command(shell->input[0], exec_paths);
-		if(!command_path)
+		if (!command_path)
 			ft_printf("minishell: %s: command not found\n", shell->input[0]);
 		else
-			if(is_dir(command_path))
+		{
+			if (is_dir(command_path))
 				ft_printf("minishell: %s: Is a directory\n", command_path);
 			else
 				run(command_path, shell->input, shell->environ);
-		if(exec_paths)
+		}
+		if (exec_paths)
 			free_string_array(exec_paths);
 		free(command_path);
 	}
@@ -132,29 +137,30 @@ void parse_command(t_shell *shell)
 ** If the binary is found, the absolute path of the binary
 ** is returned. Otherwise, NULL is returned.
 */
-char *search_command(char *name, char *exec_path)
+
+char	*search_command(char *name, char *exec_path)
 {
-	DIR *pdir;
-	struct dirent *pdirent;
-	char path[1024];
+	DIR				*pdir;
+	struct dirent	*pdirent;
+	char			path[1024];
 
 	ft_strcpy(path, exec_path);
 	ft_strcat(path, "/");
 	pdir = opendir(exec_path);
-	if(!pdir)
+	if (!pdir)
 		return (NULL);
 	while ((pdirent = readdir(pdir)) != NULL)
 	{
-		if (ft_strcmp(pdirent->d_name, name) == 0
-		&& pdirent->d_type != DT_DIR)
+		if (ft_strcmp(pdirent->d_name, name) == 0 && pdirent->d_type != DT_DIR)
 		{
 			ft_strcat(path, pdirent->d_name);
-			if(access(path, X_OK) != -1)
+			if (access(path, X_OK) != -1)
 			{
 				closedir(pdir);
 				return (ft_strdup(path));
 			}
-			ft_bzero(path + ft_strlen(exec_path) + 1, ft_strlen(pdirent->d_name));
+			ft_bzero(path + ft_strlen(exec_path) + 1,
+			ft_strlen(pdirent->d_name));
 		}
 	}
 	closedir(pdir);
@@ -176,25 +182,26 @@ char *search_command(char *name, char *exec_path)
 ** If the binary is found and is valid, the absolute path of
 ** the binary is returned. Otherwise, NULL is returned.
 */
-char *find_command(char *name, char **exec_paths)
+
+char	*find_command(char *name, char **exec_paths)
 {
-	int i;
-	char *command_path;
+	int		i;
+	char	*command_path;
 
 	i = 0;
-	if(ft_strlen(name) >= 3 && contains(name, '/') == 1)
-		if(name[0] == '.' && name[1] == '/')
-			if(access(name, F_OK) != -1 && access(name, X_OK) != -1)
+	if (ft_strlen(name) >= 3 && contains(name, '/') == 1)
+		if (name[0] == '.' && name[1] == '/')
+			if (access(name, F_OK) != -1 && access(name, X_OK) != -1)
 				return (ft_strdup(name));
-	if(ft_strlen(name) >= 3 && contains(name, '/'))
-		if(name[0] == '/')
-			if(access(name, F_OK) != -1 && access(name, X_OK) != -1)
+	if (ft_strlen(name) >= 3 && contains(name, '/'))
+		if (name[0] == '/')
+			if (access(name, F_OK) != -1 && access(name, X_OK) != -1)
 				return (ft_strdup(name));
-	if(!contains(name, '/') && exec_paths)
-		while(exec_paths[i])
+	if (!contains(name, '/') && exec_paths)
+		while (exec_paths[i])
 		{
 			command_path = search_command(name, exec_paths[i]);
-			if(command_path)
+			if (command_path)
 				return (command_path);
 			i++;
 		}

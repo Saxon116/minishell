@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/05 15:42:31 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 17:02:49 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 12:42:02 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,24 @@
 ** EXTERNAL FUNCTIONS:
 ** check_env is located in env.c
 */
-char **replace_tilde(t_shell *shell, char **input)
+
+char	**replace_tilde(t_shell *shell, char **input)
 {
-	int i;
-	int length;
-	char **new_array;
+	int		i;
+	int		length;
+	char	**new_array;
 
 	length = 0;
-	while(input[length])
+	while (input[length])
 		length++;
-	if(length < 2)
+	if (length < 2)
 		return (NULL);
 	i = 1;
 	new_array = string_arr_cpy(input);
-	while(input[i])
+	while (input[i])
 	{
 		free(new_array[i]);
-		if(contains(input[i], '~') && check_env(shell, "HOME") == -1)
+		if (contains(input[i], '~') && check_env(shell, "HOME") == -1)
 		{
 			ft_printf("HOME not set.\n");
 			return (NULL);
@@ -60,14 +61,15 @@ char **replace_tilde(t_shell *shell, char **input)
 ** RETURN VALUE:
 ** If the dollar symbol is found, 1 is returned. Otherwise, 0 is returned.
 */
-int contains_dollar(char **input)
+
+int		contains_dollar(char **input)
 {
 	int i;
 
 	i = 0;
-	while(input[i])
+	while (input[i])
 	{
-		if(contains(input[i], '$'))
+		if (contains(input[i], '$'))
 			return (1);
 		i++;
 	}
@@ -88,29 +90,30 @@ int contains_dollar(char **input)
 ** EXTERNAL FUNCTIONS:
 ** ft_getenv is located in env.c
 */
-char **replace_dollar_env(t_shell *shell, char **input)
+
+char	**replace_dollar_env(t_shell *shell, char **input)
 {
-	int i;
-	int length;
-	char **new_array;
+	int		i;
+	int		length;
+	char	**new_array;
 
 	length = 0;
-	while(input[length])
+	while (input[length])
 		length++;
-	if(!contains_dollar(input) || length < 2)
+	if (!contains_dollar(input) || length < 2)
 		return (NULL);
 	i = 1;
 	new_array = string_arr_cpy(input);
-	while(input[i])
+	while (input[i])
 	{
-		if(ft_strlen(input[i]) > 1 && input[i][0] == '$')
-    	{
-      		if(check_env(shell, input[i] + 1) != -1)
-      		{
-        		free(new_array[i]);
-        		new_array[i] = ft_getenv(shell, input[i] + 1);
-      		}
-    	}
+		if (ft_strlen(input[i]) > 1 && input[i][0] == '$')
+		{
+			if (check_env(shell, input[i] + 1) != -1)
+			{
+				free(new_array[i]);
+				new_array[i] = ft_getenv(shell, input[i] + 1);
+			}
+		}
 		i++;
 	}
 	return (new_array);

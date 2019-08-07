@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 13:35:14 by nkellum           #+#    #+#             */
-/*   Updated: 2019/07/09 16:00:17 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 11:44:05 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	print_string_field(t_flags *flags)
 
 	i = 0;
 	while (i < flags->field_length - (flags->fmt_char == 'c')
-	- (ft_strlen_p(flags->str) * (flags->precision_val >= ft_strlen_p(flags->str)
+	- (ft_strlen_p(flags->str) *
+	(flags->precision_val >= ft_strlen_p(flags->str)
 	|| (!flags->precision_val && !flags->precision_dot)))
 	- (flags->precision_val * (flags->precision_val < ft_strlen_p(flags->str))
 	* (ft_strlen_p(flags->str) != 0)))

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 17:38:51 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/05 15:57:21 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/08/07 12:01:10 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@
 ** EXTERNAL FUNCTIONS:
 ** add_env_var is located in edit_env.c
 */
-void update_pwds(t_shell *shell)
+
+void	update_pwds(t_shell *shell)
 {
-	char concat[1024];
+	char	concat[1024];
 
 	ft_bzero(concat, 1024);
 	ft_strcpy(concat, "OLDPWD=");
@@ -41,17 +42,18 @@ void update_pwds(t_shell *shell)
 ** This function changes the current working directory
 ** if the path specified exists and is executable.
 */
-void change_dir(t_shell *shell)
-{
-	char cwd[1024];
 
-	if(access(shell->input[1], F_OK) == -1)
+void	change_dir(t_shell *shell)
+{
+	char	cwd[1024];
+
+	if (access(shell->input[1], F_OK) == -1)
 	{
 		ft_printf("minishell: cd: %s: No such file or directory\n",
 		shell->input[1]);
 		return ;
 	}
-	if(access(shell->input[1], X_OK) == -1)
+	if (access(shell->input[1], X_OK) == -1)
 	{
 		ft_printf("minishell: cd: %s: Permission denied\n", shell->input[1]);
 		return ;
@@ -73,11 +75,12 @@ void change_dir(t_shell *shell)
 ** to check if the new PWD path is valid before
 ** changing it.
 */
-void check_and_cd(t_shell *shell)
-{
-	char *temp;
 
-	if(ft_strcmp(shell->input[1], "-") == 0)
+void	check_and_cd(t_shell *shell)
+{
+	char	*temp;
+
+	if (ft_strcmp(shell->input[1], "-") == 0)
 	{
 		temp = ft_strdup(shell->oldpwd);
 		free(shell->oldpwd);
@@ -101,12 +104,13 @@ void check_and_cd(t_shell *shell)
 ** it is set. If it is not, an error message
 ** is displayed.
 */
-void cd_home(t_shell *shell)
+
+void	cd_home(t_shell *shell)
 {
-	char *path;
+	char	*path;
 
 	path = ft_getenv(shell, "HOME");
-	if(!path)
+	if (!path)
 	{
 		ft_printf("HOME environment variable not defined.\n");
 		return ;
@@ -129,19 +133,20 @@ void cd_home(t_shell *shell)
 ** RETURN VALUE:
 ** On success, 1 is returned. On error, 0 is returned.
 */
-int cd(t_shell *shell)
+
+int		cd(t_shell *shell)
 {
-	int length;
+	int	length;
 
 	length = 0;
-	while(shell->input[length])
+	while (shell->input[length])
 		length++;
-	if(length >= 3)
+	if (length >= 3)
 	{
 		ft_printf("minishell: cd: too many arguments\n");
 		return (0);
 	}
-	if(length == 2)
+	if (length == 2)
 		check_and_cd(shell);
 	else
 		cd_home(shell);
