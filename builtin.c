@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:40:59 by nkellum           #+#    #+#             */
-/*   Updated: 2019/08/07 11:59:45 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/09/10 15:39:12 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,24 +153,17 @@ int		run_builtin(t_shell *shell)
 
 int		is_builtin(char *command)
 {
-	int	i;
-
-	i = 0;
-	while (builtins[i])
-	{
-		if (ft_strcmp(command, "echo") == 0)
-			return (1);
-		if (ft_strcmp(command, "cd") == 0)
-			return (1);
-		if (ft_strcmp(command, "exit") == 0)
-			return (1);
-		if (ft_strcmp(command, "setenv") == 0)
-			return (1);
-		if (ft_strcmp(command, "unsetenv") == 0)
-			return (1);
-		if (ft_strcmp(command, "env") == 0)
-			return (1);
-		i++;
-	}
+	if (ft_strcmp(command, "echo") == 0)
+		return (1);
+	if (ft_strcmp(command, "cd") == 0)
+		return (1);
+	if (ft_strcmp(command, "exit") == 0)
+		return (1);
+	if (ft_strcmp(command, "setenv") == 0)
+		return (1);
+	if (ft_strcmp(command, "unsetenv") == 0)
+		return (1);
+	if (ft_strcmp(command, "env") == 0)
+		return (1);
 	return (0);
 }
